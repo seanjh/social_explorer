@@ -1,7 +1,7 @@
 import json
 import os
 
-from dbscan import compute_dbscan, plot_dbscan
+from dbscan import dbscan_cluster
 from instragram_explore import instagram_user_locations
 
 ROWS_INDEX = 0
@@ -26,7 +26,7 @@ def make_location_dict(location, labels):
     } for i in range(rows)]
 
 
-def output_location_json(username, id, locations, labels):
+def output_location_json(username, id, locations, labels, posts):
     try:
         json_data = {
             'username': username,
@@ -39,18 +39,17 @@ def output_location_json(username, id, locations, labels):
             json.dump(json_data, outfile, indent=2, sort_keys=True)
     except AssertionError as e:
         print 'Error processing location data'
-        pass
 
 
 def main():
-    username = 'seannnnnnnnnnnn'
-    user_id, locations = instagram_user_locations(username)
-    labels, core_samples_mask, n_clusters_, X = compute_dbscan(locations)
-    output_location_json(username, user_id, locations, labels)
+    username = 'maryblockarino'
+    user_id, locations, posts = instagram_user_locations(username)
+    labels, core_samples_mask, n_clusters_, X = dbscan_cluster(locations)
+    output_location_json(username, user_id, locations, labels, posts)
     print labels
     print locations
 
-    plot_dbscan(labels, core_samples_mask, n_clusters_, X)
+    # plot_dbscan(labels, core_samples_mask, n_clusters_, X)
 
 if __name__ == '__main__':
     main()

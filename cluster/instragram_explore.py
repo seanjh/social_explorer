@@ -9,10 +9,8 @@ except ImportError as e:
     print e
     exit(1)
 
-# from dbscan import compute_dbscan
 
-
-def get_instragram_api(access_token):
+def instagram_get_api(access_token):
     return InstagramAPI(access_token=access_token)
 
 
@@ -84,21 +82,33 @@ def instagram_print_posts_results(posts):
         print
 
 
-def instagram_get_locations_array(posts):
-    locations = [
-        (media.location.point.latitude, media.location.point.longitude)
+def instagram_get_locations_posts(posts):
+    location_posts = [
+        {
+            "latitude": media.location.point.latitude,
+            "longitude": media.location.point.longitude,
+            "id": media.id,
+            "caption": media.caption,
+            "link": media.link,
+            "created": media.created_time,
+            "type": media.type
+        }
+        # (media.location.point.latitude, media.location.point.longitude)
         for media in posts
         if hasattr(media, 'location') and
         hasattr(media.location, 'point') and
         hasattr(media.location.point, 'latitude') and
         hasattr(media.location.point, 'longitude')
     ]
-    print
-    return array(locations)
+    return location_posts
+
+
+def instagram_get_locations_array(posts):
+    return array([(post.get('latitude'), post.get('longitude')) for post in posts])
 
 
 def instagram_user_locations(username):
-    instagram_api = get_instragram_api(INSTAGRAM.get('token')[0])
+    instagram_api = instagram_get_api(INSTAGRAM.get('token')[0])
     username = username
     users = instagram_find_user(instagram_api, username)
     user_match = instagram_match_username(users, username)
@@ -110,15 +120,15 @@ def instagram_user_locations(username):
         # instagram_print_posts_results(posts)
 
         # http://datasyndrome.com/post/69514893525/yelp-dataset-challenge-part-0-geographic
-        locations = instagram_get_locations_array(posts)
+        location_posts = instagram_get_locations_posts(posts)
+        locations = instagram_get_locations_array(location_posts)
         print '%s has %s instagram updates with a location' % (username, locations.size)
 
-        return user_match.id, locations
-
-
+        return user_match.id, locations, posts
     else:
         return None, None
 
+# lat, long, label, text, url, image/video, username, user_id
 
 if __name__ == '__main__':
     instagram_user_locations('seannnnnnnnnnnn')
