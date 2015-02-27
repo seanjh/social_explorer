@@ -5,7 +5,9 @@ from instagram.client import InstagramAPI
 
 app = Flask(__name__)
 
-if not os.getenv('FLASK_SECRET_KEY') or os.getenv('FLASK_PASSWORD') or os.getenv('FLASK_USERNAME'):
+if (not os.getenv('FLASK_SECRET_KEY') or
+        not os.getenv('FLASK_PASSWORD') or
+        not os.getenv('FLASK_USERNAME')):
     raise Exception("Missing Flask env variables")
 
 # Load default config
@@ -84,7 +86,7 @@ if os.getenv('FLASK_ENV', None) != 'PRODUCTION':
 elif not os.getenv('INSTAGRAM_REDIRECT_URI'):
     raise OAuthException("Invalid INSTAGRAM_REDIRECT_URI env variable")
 else:
-    raise OAuthException("WTF")
+    instagram_redirect = os.getenv('INSTAGRAM_REDIRECT_URI')
 
 instagram = InstagramAPI(
     client_id=instagram_consumer_key,
