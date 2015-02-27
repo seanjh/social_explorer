@@ -52,13 +52,32 @@ class SocialData(object):
         self.location = location
 
     def to_JSON(self):
-        return {
+        json = {
             "url": self.url if self.url else None,
             "id": self.id if self.id else None,
-            "body": self.body if self.body else None,
-            "media": self.media if self.media else None,
+            "body": self.body.text if self.body and self.body.text else None,
+            # "media": self.media if self.media else None,
             "location": self.location.to_JSON() if self.location else None
         }
+        if self.media:
+            media_json = {}
+            for key, val in self.media.iteritems():
+                media_json[key] = {}
+                if val.height and val.width:
+                    media_json[key]['height'] = val.height
+                    media_json[key]['width'] = val.width
+                if val.url:
+                    media_json[key]['url'] = val.url
+            json['media'] = media_json
+
+        return json
+        # return {
+        #     "url": self.url if self.url else None,
+        #     "id": self.id if self.id else None,
+        #     "body": self.body.text if self.body and self.body.text else None,
+        #     "media": self.media if self.media else None,
+        #     "location": self.location.to_JSON() if self.location else None
+        # }
 
 
 class SocialExplorer(object):
@@ -67,13 +86,11 @@ class SocialExplorer(object):
     LONG_INDEX = 0
     LABEL_INDEX = 0
 
-    def __init__(self, token_env_var, username, debug=False, access_token=None):
+    def __init__(self, access_token, username, debug=False):
         self._username = username
         self.user_id = None
         if not access_token:
-            self._token = os.getenv(token_env_var)
-            if not self._token:
-                raise MissingTokenException()
+            raise MissingTokenException()
         else:
             self._token = access_token
         self._api = None
@@ -128,7 +145,7 @@ class SocialExplorer(object):
         return {
             "username": self.username if self.username else None,
             "user_id": self.user_id if self.user_id else None,
-            "labels": self.label_meta.iteritems() if self.label_meta else None,
+            "labels": self.label_meta.items() if self.label_meta else None,
             "data": [d.to_JSON() for d in self.data]
         }
 
@@ -245,7 +262,7 @@ class SocialExplorer(object):
                 # json_data = json.dumps(self, indent=2, sort_keys=True)
                 with open(filename, 'w') as outfile:
                     print 'Outputting location data to %s' % filename
-                    json.dumps(self.to_JSON(), outfile, indent=2, sort_keys=True)
+                    json.dump(self.to_JSON(), outfile, indent=2, sort_keys=True)
             except AssertionError as e:
                 print 'Error processing location data'
         else:
@@ -343,5 +360,6 @@ class InstagramExplorer(SocialExplorer):
 
 
 if __name__ == '__main__':
-    explorer = InstagramExplorer('INSTAGRAM', 'maryblockarino', debug=True)
+    token = os.getenv('INSTAGRAM_TOKEN')
+    explorer = InstagramExplorer(token, 'seannnnnnnnnnnn', debug=True)
     explorer.save_JSON()

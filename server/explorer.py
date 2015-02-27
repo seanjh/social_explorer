@@ -1,14 +1,18 @@
 import os
-from flask import Flask, render_template, request, redirect, session, url_for, flash
+from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
 from flask_oauth import OAuth, OAuthException
 from instagram.client import InstagramAPI
 
+from cluster.social_locations import InstagramExplorer
+
 app = Flask(__name__)
 
-if (not os.getenv('FLASK_SECRET_KEY') or
-        not os.getenv('FLASK_PASSWORD') or
-        not os.getenv('FLASK_USERNAME')):
-    raise Exception("Missing Flask env variables")
+if not os.getenv('FLASK_SECRET_KEY'):
+    raise Exception("Missing FLASK_SECRET_KEY env variable")
+if not os.getenv('FLASK_PASSWORD'):
+    raise Exception("Missing FLASK_PASSWORD env variable")
+if not os.getenv('FLASK_USERNAME'):
+    raise Exception("Missing FLASK_USERNAME env variable")
 
 # Load default config
 app.config.update(dict(
@@ -112,12 +116,25 @@ def oauth_authorized_instagram():
 
         session['instagram_token'] = access_token
         session['instagram_user'] = user
+        # print 'INSTAGRAM TOKEN %s' % session['instagram_token']
 
     else:
         flash(u'Missing Instagram code.')
 
     # redirect back to main page
     return redirect('/')
+
+
+@app.route('/explore')
+def explore():
+    token = session['instagram_token']
+    user = session['instagram_user'].get('username')
+    print 'InstagramExplorer for user %s with token %s' % (user, token)
+    explorer = InstagramExplorer(token, user)
+    return jsonify({
+        "instagram": explorer.to_JSON(),
+        "twitter": None
+    })
 
 
 @app.route('/')
