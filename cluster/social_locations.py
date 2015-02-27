@@ -35,6 +35,13 @@ class Location(object):
         self.longitude = longitude
         self.label = label
 
+    def to_JSON(self):
+        return {
+            "latitude": self.latitude,
+            "longitude": self.longitude,
+            "label": self.label if self.label else None
+        }
+
 
 class SocialData(object):
     def __init__(self, url=None, id=None, media=None, body=None, location=None):
@@ -44,6 +51,15 @@ class SocialData(object):
         self.body = body
         self.location = location
 
+    def to_JSON(self):
+        return {
+            "url": self.url if self.url else None,
+            "id": self.id if self.id else None,
+            "body": self.body if self.body else None,
+            "media": self.media if self.media else None,
+            "location": self.location.to_JSON() if self.location else None
+        }
+
 
 class SocialExplorer(object):
     ROWS_INDEX = 0
@@ -51,12 +67,15 @@ class SocialExplorer(object):
     LONG_INDEX = 0
     LABEL_INDEX = 0
 
-    def __init__(self, token_env_var, username, debug=False):
+    def __init__(self, token_env_var, username, debug=False, access_token=None):
         self._username = username
         self.user_id = None
-        self._token = os.getenv(token_env_var)
-        if not self._token:
-            raise MissingTokenException()
+        if not access_token:
+            self._token = os.getenv(token_env_var)
+            if not self._token:
+                raise MissingTokenException()
+        else:
+            self._token = access_token
         self._api = None
         self._data = None
         self._debug = debug
@@ -96,14 +115,22 @@ class SocialExplorer(object):
             self._collect_label_meta()
         return self._label_meta
 
-    def _is_standardized(self):
-        try:
-            assert self.username
-            assert self.data
-            assert self.locations
-            # assert self.location_labels
-        except:
-            raise AssertionError()
+    # def _is_standardized(self):
+    #     try:
+    #         assert self.username
+    #         assert self.data
+    #         assert self.locations
+    #         # assert self.location_labels
+    #     except:
+    #         raise AssertionError()
+
+    def to_JSON(self):
+        return {
+            "username": self.username if self.username else None,
+            "user_id": self.user_id if self.user_id else None,
+            "labels": self.label_meta.iteritems() if self.label_meta else None,
+            "data": [d.to_JSON() for d in self.data]
+        }
 
     @staticmethod
     def _reverse_geocode(geocoder, tag_name, lat, long):
@@ -151,7 +178,7 @@ class SocialExplorer(object):
                 labels.setdefault(int(val.location.label), list()).append(val.location)
 
             # Randomly select 1-5 locations / label
-            sample_labels = dict(labels)
+            sample_labels = {}
             for key in labels.iterkeys():
                 limit = min(5, len(labels[key]))
                 indices = [randrange(0, len(labels[key])) for i in range(limit)]
@@ -160,11 +187,11 @@ class SocialExplorer(object):
             # Get City/Place names for each label's locations
             geocoder = GoogleV3(api_key=os.getenv('GOOGLE'))
             name_lists = {}
-            i = 0
+            # i = 0
             for key in sample_labels.iterkeys():
                 for location in sample_labels[key]:
-                    i += 1
-                    print '%d: Requesting reverse geocoding for %s, %s' % (i, location.latitude, location.longitude)
+                    # i += 1
+                    # print '%d: Requesting reverse geocoding for %s, %s' % (i, location.latitude, location.longitude)
                     name_lists.setdefault(key, list()).append(
                         SocialExplorer._reverse_geocode(
                             geocoder,
@@ -194,7 +221,7 @@ class SocialExplorer(object):
                     "count": len(labels[key])
                 }
         else:
-            pass
+            print 'Cannot get label names'
 
     # def _serialize_data(self):
     #     # rows = self.locations.shape[SocialExplorer.ROWS_INDEX]
@@ -212,14 +239,13 @@ class SocialExplorer(object):
     def save_JSON(self):
         # raise NotImplementedError()
         if self._data:
-            self._is_standardized()
-            # outfile = os.path.join(DATA_DIR, filename)
+            # self._is_standardized()
+            filename = os.path.join(DATA_DIR, 'instagram-%s.json' % self.username)
             try:
-                json_data = json.dumps(self, indent=2, sort_keys=True)
-                filename = os.path.join(DATA_DIR, 'instagram-%s.json' % self.username)
+                # json_data = json.dumps(self, indent=2, sort_keys=True)
                 with open(filename, 'w') as outfile:
                     print 'Outputting location data to %s' % filename
-                    json.dumps(json_data, outfile)
+                    json.dumps(self.to_JSON(), outfile, indent=2, sort_keys=True)
             except AssertionError as e:
                 print 'Error processing location data'
         else:
@@ -317,4 +343,5 @@ class InstagramExplorer(SocialExplorer):
 
 
 if __name__ == '__main__':
-    InstagramExplorer('INSTAGRAM', 'berks', debug=True)
+    explorer = InstagramExplorer('INSTAGRAM', 'maryblockarino', debug=True)
+    explorer.save_JSON()
