@@ -14,6 +14,7 @@ if not os.getenv('FLASK_PASSWORD'):
 if not os.getenv('FLASK_USERNAME'):
     raise Exception("Missing FLASK_USERNAME env variable")
 
+
 # Load default config
 app.config.update(dict(
     SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
