@@ -5,6 +5,7 @@ Flask==0.10.1
 Flask-OAuth==0.12
 future==0.14.3
 geopy==1.9.1
+gunicorn==19.2.1
 httplib2==0.9
 httpretty==0.8.7
 itsdangerous==0.24
