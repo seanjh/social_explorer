@@ -1,6 +1,5 @@
 backports.ssl-match-hostname==3.4.0.2
 certifi==14.5.14
-facebook-sdk==0.4.0
 Flask==0.10.1
 Flask-OAuth==0.12
 future==0.14.3
@@ -11,7 +10,6 @@ httpretty==0.8.7
 itsdangerous==0.24
 Jinja2==2.7.3
 MarkupSafe==0.23
-matplotlib==1.4.3
 mock==1.0.1
 nose==1.3.4
 numpy==1.9.1
@@ -21,7 +19,6 @@ pyparsing==2.0.3
 python-crfsuite==0.8.2
 python-dateutil==2.4.0
 python-instagram==1.3.0
-PyTumblr==0.0.6
 pytz==2014.10
 PyYAML==3.11
 requests==2.5.3
