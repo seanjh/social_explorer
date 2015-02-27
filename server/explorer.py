@@ -5,11 +5,14 @@ from instagram.client import InstagramAPI
 
 app = Flask(__name__)
 
+if not os.getenv('FLASK_SECRET_KEY') or os.getenv('FLASK_PASSWORD') or os.getenv('FLASK_USERNAME'):
+    raise Exception("Missing Flask env variables")
+
 # Load default config
 app.config.update(dict(
-    SECRET_KEY='development key',
-    USERNAME='admin',
-    PASSWORD='default'
+    SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
+    USERNAME=os.getenv('FLASK_USERNAME'),
+    PASSWORD=os.getenv('FLASK_PASSWORD')
 ))
 
 oauth = OAuth()
