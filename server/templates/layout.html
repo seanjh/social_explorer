@@ -3,27 +3,7 @@
     <title>Social Explorer</title>
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
 </head>
-<div class="page">
-    <h1>Social Explorer</h1>
-    <h2>Sean Herman, Daniel Levine</h2>
-    <div class="metanav">
-        {% if not session['twitter_token'] %}
-            <a href="{{ url_for('authorize_twitter') }}">Authorize Twitter</a>
-        {% else %}
-            <p>Authorized as Twitter user <strong>{{ session['twitter_user'] }}</strong></p>
-        {% endif %}
-    </div>
-    <div>
-        {% if not session['instagram_token'] %}
-            <a href="{{ url_for('authorize_instagram') }}">Authorize Instagram</a>
-        {% else %}
-            <p>Authorized as Instagram user <strong>{{ session['instagram_user']['username'] }}</strong></p>
-        {% endif %}
-    </div>
-    <hr>
-    <div><a href="{{ url_for('clear') }}">Clear session</a></div>
-        {% for message in get_flashed_messages() %}
-    <div class="flash">{{ message }}</div>
-        {% endfor %}
-        {% block body %}{% endblock %}
-</div>
+<body>
+    <a href="/">Home</a>
+    {% block body %}{% endblock %}
+</body>

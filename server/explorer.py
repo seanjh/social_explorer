@@ -18,7 +18,7 @@ twitter_consumer_key = os.getenv('TWITTER_CONSUMER_KEY')
 twitter_consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET')
 
 if not twitter_consumer_key or not twitter_consumer_secret:
-    raise OAuthException("Invalid TWITTER-CONSUMER-KEY and TWITTER-CONSUMER-SECRET env variables")
+    raise OAuthException("Invalid TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET env variables")
 
 twitter = oauth.remote_app(
     'twitter',
@@ -33,9 +33,6 @@ twitter = oauth.remote_app(
 
 @twitter.tokengetter
 def get_twitter_token(token=None):
-    # twitter_token = session.get('twitter_token')
-    # if twitter_token:
-    #     print 'TWITTER TOKEN IS %s' % str(twitter_token)
     return session.get('twitter_token')
 
 
@@ -76,13 +73,13 @@ def oauth_authorized_twitter(resp):
 instagram_consumer_key = os.getenv('INSTAGRAM_CONSUMER_KEY')
 instagram_consumer_secret = os.getenv('INSTAGRAM_CONSUMER_SECRET')
 if not instagram_consumer_key or not instagram_consumer_secret:
-    raise OAuthException("Invalid INSTAGRAM-CONSUMER-KEY and INSTAGRAM-CONSUMER-SECRET env variables")
+    raise OAuthException("Invalid INSTAGRAM_CONSUMER_KEY and INSTAGRAM_CONSUMER_SECRET env variables")
 
 # redirect_uri should point to url_for('oauth_authorized_instagram') on the server
 if os.getenv('FLASK_ENV', None) != 'PRODUCTION':
     instagram_redirect = 'http://127.0.0.1:5000/oauth-authorized-instagram'
-elif not os.getenv('INSTAGRAM-REDIRECT-URI'):
-    raise OAuthException("Invalid INSTAGRAM-REDIRECT-URI env variable")
+elif not os.getenv('INSTAGRAM_REDIRECT_URI'):
+    raise OAuthException("Invalid INSTAGRAM_REDIRECT_URI env variable")
 else:
     raise OAuthException("WTF")
 
