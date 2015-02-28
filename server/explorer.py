@@ -1,4 +1,8 @@
 import os
+import logging
+import sys
+from logging import Formatter
+
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
 from flask_oauth import OAuth, OAuthException
 from instagram.client import InstagramAPI
@@ -6,6 +10,19 @@ from instagram.client import InstagramAPI
 from cluster.social_locations import InstagramExplorer
 
 app = Flask(__name__)
+
+
+def log_to_stderr(app):
+    handler = logging.StreamHandler(sys.stderr)
+    handler.setFormatter(Formatter(
+    '%(asctime)s %(levelname)s: %(message)s '
+    '[in %(pathname)s:%(lineno)d]'
+    ))
+    handler.setLevel(logging.WARNING)
+    app.logger.addHandler(handler)
+
+
+log_to_stderr(app)
 
 if not os.getenv('FLASK_SECRET_KEY'):
     raise Exception("Missing FLASK_SECRET_KEY env variable")
