@@ -152,7 +152,7 @@ def explore():
     print 'InstagramExplorer for user %s with token %s' % (user, token)
     explorer = InstagramExplorer(token, user)
     return jsonify({
-        "instagram": explorer.to_JSON(),
+        "instagram": explorer.json,
         "twitter": None
     })
 
