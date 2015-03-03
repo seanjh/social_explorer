@@ -62,7 +62,7 @@ class SocialExplorer(object):
         return {
             "username": self.username if self.username else None,
             "user_id": self.user_id if self.user_id else None,
-            "labels": self.label_meta.items() if self.label_meta else None,
+            "labels": self.label_meta if self.label_meta else None,
             "data": [d.json for d in self.data]
         }
 

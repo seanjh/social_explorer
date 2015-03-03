@@ -22,7 +22,8 @@ if __name__ == '__main__':
         latitude = 40.7636791
         longitude = -73.9611658
         radius = 1
+        label = 99
         twitter = TwitterExplorer(twitter_token, twitter_token_secret, twitter_user, debug=True)
-        twitter.search_tweets(latitude, longitude, radius, 99)
+        twitter.search_tweets(latitude, longitude, radius, label)
 
         twitter.save()  # saves a JSON file to disk
