@@ -7,7 +7,7 @@ from flask import Flask, render_template, request, redirect, session, url_for, f
 from flask_oauth import OAuth, OAuthException
 from instagram.client import InstagramAPI
 
-from cluster.social_locations import InstagramExplorer
+from cluster.instagram_locations import InstagramExplorer
 
 app = Flask(__name__)
 
@@ -91,6 +91,8 @@ def oauth_authorized_twitter(resp):
         resp['oauth_token'],
         resp['oauth_token_secret']
     )
+    print "Twitter oauth_token is %s " % session['twitter_token'][0]
+    print "Twitter oauth_token_secret is %s " % session['twitter_token'][1]
     session['twitter_user'] = resp['screen_name']
 
     flash('Successfully authorized with Twitter as %s' % session['twitter_user'])
@@ -134,7 +136,7 @@ def oauth_authorized_instagram():
 
         session['instagram_token'] = access_token
         session['instagram_user'] = user
-        # print 'INSTAGRAM TOKEN %s' % session['instagram_token']
+        print 'Instagram token is %s' % session['instagram_token']
 
     else:
         flash(u'Missing Instagram code.')
