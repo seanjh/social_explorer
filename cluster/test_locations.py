@@ -11,7 +11,7 @@ if __name__ == '__main__':
         instagram_user = 'seannnnnnnnnnnn'
         instagram_token = os.getenv('INSTAGRAM_TOKEN')
         instagram = InstagramExplorer(instagram_token, instagram_user, debug=True)
-        instagram.save()
+        instagram.save()  # saves a JSON file to disk
 
     if TWITTER:
         twitter_user = 'seannnnnnnnnnnn'
@@ -25,4 +25,4 @@ if __name__ == '__main__':
         twitter = TwitterExplorer(twitter_token, twitter_token_secret, twitter_user, debug=True)
         twitter.search_tweets(latitude, longitude, radius, 99)
 
-        twitter.save()
+        twitter.save()  # saves a JSON file to disk
