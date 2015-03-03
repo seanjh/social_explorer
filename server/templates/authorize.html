@@ -1,24 +1,39 @@
-<div class="page">
-    <h1>Social Explorer</h1>
-    <h2>Sean Herman, Daniel Levine</h2>
-    <hr>
-    <div class="metanav">
-        {% if not session['twitter_token'] %}
-            <a href="{{ url_for('authorize_twitter') }}">Authorize Twitter</a>
-        {% else %}
-            <p>Authorized as Twitter user <strong>{{ session['twitter_user'] }}</strong></p>
-        {% endif %}
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">Social Connections</h3>
     </div>
-    <div>
-        {% if not session['instagram_token'] %}
-            <a href="{{ url_for('authorize_instagram') }}">Authorize Instagram</a>
-        {% else %}
-            <p>Authorized as Instagram user <strong>{{ session['instagram_user']['username'] }}</strong></p>
-        {% endif %}
+
+    <div class="panel-body">
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    {% if not session['twitter_token'] %}
+                        <form action="{{ url_for('authorize_twitter') }}">
+                            <button type="submit" class="btn btn-default navbar-btn">Authorize Twitter</button>
+                        </form>
+                    {% else %}
+                        <p class="navbar-text">Authorized as Twitter user <strong>{{ session['twitter_user'] }}</strong></p>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
+
+        <nav class="navbar navbar-default">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    {% if not session['instagram_token'] %}
+                        <form action="{{ url_for('authorize_instagram') }}">
+                            <button type="submit" class="btn btn-default navbar-btn">Authorize Instagram</button>
+                        </form>
+                    {% else %}
+                        <p class="navbar-text">Authorized as Instagram user <strong>{{ session['instagram_user']['username'] }}</strong></p>
+                    {% endif %}
+                </div>
+            </div>
+        </nav>
     </div>
-    <hr>
-    <div><a href="{{ url_for('clear') }}">Clear session</a></div>
-        {% for message in get_flashed_messages() %}
-            <div class="flash">{{ message }}</div>
-        {% endfor %}
+
+    {% include 'clear_auth.html' %}
+    {% include 'flash.html' %}
 </div>

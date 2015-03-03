@@ -1,0 +1,8 @@
+{% for message in get_flashed_messages() %}
+    <div class="container-fluid">
+        <div class="alert alert-success" role="alert">
+            <div class="flash">{{ message }}</div>
+        </div>
+    </div>
+    <br />
+{% endfor %}

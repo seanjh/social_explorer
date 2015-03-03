@@ -1,0 +1,8 @@
+{% if session['twitter_token'] or session['instagram_token'] %}
+    <div class="container-fluid">
+        <form action="{{ url_for('clear') }}">
+            <button type="submit" class="btn btn-warning">Clear session</button>
+        </form>
+    </div>
+    <br />
+{% endif %}

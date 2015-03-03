@@ -1,12 +1,15 @@
 {% extends "layout.html" %}
-{% include 'authorize.html' %}
-{% block body %}
-    <hr>
-    <form action="/explore">
-        {% if session['instagram_token'] and session['instagram_user'] %}
-            <input type="submit" value="Explore">
+{% block content %}
+    {% include 'header.html' %}
+    {% include 'subhead.html' %}
+    {% include 'authorize.html' %}
+        {% if session['twitter_token'] and session['instagram_token'] %}
+            <form action="/explore">
+                <button type="submit" class="btn btn-lg btn-success">Explore</button>
+            </form>
         {% else %}
-            <input type="submit" value="Explore" disabled>
+            <form action="/explore">
+                <button type="submit" class="btn btn-lg btn-success" disabled>Explore</button>
+            </form>
         {% endif %}
-    </form>
 {% endblock %}

@@ -5,11 +5,13 @@ from logging import Formatter
 
 from flask import Flask, render_template, request, redirect, session, url_for, flash, jsonify
 from flask_oauth import OAuth, OAuthException
+from flask_bootstrap import Bootstrap
 from instagram.client import InstagramAPI
 
 from cluster.instagram_locations import InstagramExplorer
 
 app = Flask(__name__)
+Bootstrap(app)
 
 
 def log_to_stderr(app):
@@ -147,14 +149,15 @@ def oauth_authorized_instagram():
 
 @app.route('/explore')
 def explore():
-    token = session['instagram_token']
-    user = session['instagram_user'].get('username')
-    print 'InstagramExplorer for user %s with token %s' % (user, token)
-    explorer = InstagramExplorer(token, user)
-    return jsonify({
-        "instagram": explorer.json,
-        "twitter": None
-    })
+    return render_template('explore.html')
+    # token = session['instagram_token']
+    # user = session['instagram_user'].get('username')
+    # print 'InstagramExplorer for user %s with token %s' % (user, token)
+    # explorer = InstagramExplorer(token, user)
+    # return jsonify({
+    #     "instagram": explorer.json,
+    #     "twitter": None
+    # })
 
 
 @app.route('/')

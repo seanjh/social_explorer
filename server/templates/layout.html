@@ -1,9 +1,16 @@
-<!doctype html>
-<head>
-    <title>Social Explorer</title>
-    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
-</head>
+{% extends "bootstrap/base.html" %}
+{% block title %}Social Explorer{% endblock %}
+{% block styles %}
+    {{super()}}
+    <link rel="stylesheet"
+      href="{{url_for('.static', filename='styles.css')}}">
+{% endblock %}
+{% block body %}
 <body>
-    <a href="/">Home</a>
-    {% block body %}{% endblock %}
+    <div class="container">
+        {% block content %}
+        {% endblock %}
+    </div>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/holder/2.5.2/holder.min.js"></script>
 </body>
+{% endblock %}

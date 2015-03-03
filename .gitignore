@@ -95,7 +95,7 @@ node_modules
 ##########
 
 data/
-secrets.py
+secrets.py*
 
 # PyCharm, WebStorm
 .idea/
