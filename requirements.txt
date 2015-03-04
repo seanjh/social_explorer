@@ -28,6 +28,7 @@ scikit-learn==0.15.2
 scipy==0.15.1
 simplejson==3.6.5
 six==1.9.0
+static3==0.5.1
 tornado==4.1
 tweepy==3.3.0
 urllib3==1.10.1
