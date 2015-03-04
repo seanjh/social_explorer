@@ -164,31 +164,31 @@ def instagram_explore():
 
 @app.route('/twitter')
 def twitter_explore():
-    twitter_token = session['twitter_token'][0]
-    twitter_token_secret = session['twitter_token'][1]
-    twitter_username = session['twitter_user']
+        twitter_token = session['twitter_token'][0]
+        twitter_token_secret = session['twitter_token'][1]
+        twitter_username = session['twitter_user']
 
-    # Get data from request
-    latitude = request.args.get('latitude', None)
-    longitude = request.args.get('longitude', None)
-    radius = request.args.get('radius', 1)
-    label = request.args.get('label', 99)
+        # Get data from request
+        latitude = request.args.get('latitude', None)
+        longitude = request.args.get('longitude', None)
+        radius = request.args.get('radius', 1)
+        label = request.args.get('label', 99)
 
-    print ('TwitterExplorer for user %s with token %s, '
-           'lat=%s lon=%s radius=%dmi') % (
-        twitter_username, twitter_token, latitude, longitude, radius
-    )
+        print ('TwitterExplorer for user %s with token %s, '
+               'lat=%s lon=%s radius=%dmi') % (
+            twitter_username, twitter_token, latitude, longitude, radius
+        )
 
-    if latitude is None:
-        return jsonify({"error": "Bad request. Missing latitude"}), 400
-    if longitude is None:
-        return jsonify({"error": "Bad request. Missing longitude"}), 400
-    else:
-        twitter_explorer = TwitterExplorer(
-            twitter_token, twitter_token_secret, twitter_username
-            )
-        twitter_explorer.search_tweets(latitude, longitude, radius, label)
-        return jsonify(twitter_explorer.json), 200
+        if latitude is None:
+            return jsonify({"error": "Bad request. Missing latitude"}), 400
+        if longitude is None:
+            return jsonify({"error": "Bad request. Missing longitude"}), 400
+        else:
+            twitter_explorer = TwitterExplorer(
+                twitter_token, twitter_token_secret, twitter_username
+                )
+            twitter_explorer.search_tweets(latitude, longitude, radius, label)
+            return jsonify(twitter_explorer.json), 200
 
 @app.route('/explore')
 def explore():

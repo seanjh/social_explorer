@@ -1,7 +1,7 @@
 (function() {
   'use strict';
 
-  angular.module('SocialExplorerApp', [])
+  angular.module('SocialExplorerApp', ['ngResource'])
   .config(function($interpolateProvider){
     $interpolateProvider.startSymbol('{[{').endSymbol('}]}');
   })
@@ -16,6 +16,10 @@
     };
   }])
 
+  .factory('cmseTwitterService', ['$resource', function ($resource) {
+    return $resource('/twitter/');
+  }])
+
   .filter('getLabelName', function () {
     return function(label, scope) {
       if (scope.instagram.labels && scope.instagram.labels[label]) {
@@ -26,16 +30,13 @@
     };
   })
 
-  .factory('cmseTwitterService', ['$resource', function ($resource) {
-    return $resource('/twitter', {}, {});
-  }])
-
   .controller('cmseSocialCtrl', 
-    ['$scope', '$log', '$http', 'cmseInstagramService', 
-    function($scope, $log, $http, cmseInstagramService) {
+    ['$scope', '$log', '$http', 'cmseInstagramService', 'cmseTwitterService',
+    function($scope, $log, $http, cmseInstagramService, cmseTwitterService) {
       $scope.loading = true;
       $scope.instagram = {}
       $scope.chunkedData = {};
+      $scope.twitter = {};
       var chunkSize = 4;
 
       function partitionByLabel(arr) {
@@ -56,14 +57,6 @@
         }
         return result;
       }
-
-      // $scope.getLabelName = function(label) {
-      //   if ($scope.instagram.labels && $scope.instagram.labels[label]) {
-      //     return $scope.instagram.labels[label].name;
-      //   } else {
-      //     return 'N/A';
-      //   }
-      // }
 
       $scope.getImageURL = function(media) {
         if (media.thumbnail) return media.thumbnail.url;
@@ -91,16 +84,34 @@
       }
 
       cmseInstagramService.get(function(resp) {
+        var key;
         $scope.instagram = resp;
         $log.log('Raw data: ' + $scope.instagram);
         var labelData = partitionByLabel(resp.data);
         $log.log(labelData);
-        for (var key in labelData) {
+        for (key in labelData) {
           $log.log('Getting chunks for label ' + key);
           $scope.chunkedData[key] = chunk(labelData[key], chunkSize);
         }
         $log.log('Chunked data' + $scope.chunkedData);
         $scope.loading = false;
+
+        var sample, query, lat, lon;
+        for (key in labelData) {
+          sample = labelData[key][0];
+          // $log.log('Using sample instagram data');
+          // $log.log(sample);
+          lat = sample.location.latitude;
+          lon = sample.location.longitude;
+          query = {latitude: lat, longitude: lon, label: key};
+          $log.log(query);
+          cmseTwitterService.get(query, function (tweet_meta) {
+            // $log.log('Twitter data for label ' + key);
+            // $log.log(tweet_meta);
+            $scope.twitter[key] = tweet_meta;
+          });
+        }
+        $log.log($scope.twitter);
       });
   }])
 
