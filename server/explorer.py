@@ -149,7 +149,7 @@ def oauth_authorized_instagram():
 
 @app.route('/instagram')
 def instagram_explore():
-    if not session['instagram_data']:
+    if not session.get('instagram_data'):
         instagram_token = session['instagram_token']
         instagram_user = session['instagram_user'].get('username')
         print 'InstagramExplorer for user %s with token %s' % (
