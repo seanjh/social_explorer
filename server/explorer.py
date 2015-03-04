@@ -9,6 +9,7 @@ from flask_bootstrap import Bootstrap
 from instagram.client import InstagramAPI
 
 from cluster.instagram_locations import InstagramExplorer
+from cluster.twitter_locations import TwitterExplorer
 
 app = Flask(__name__)
 
@@ -145,17 +146,48 @@ def oauth_authorized_instagram():
     return redirect('/')
 
 
+@app.route('/instagram')
+def instagram():
+    instagram_token = session['instagram_token']
+    instagram_user = session['instagram_user'].get('username')
+    print 'InstagramExplorer for user %s with token %s' % (
+        instagram_user, instagram_token
+        )
+    instagram_explorer = InstagramExplorer(instagram_token, instagram_user)
+    return jsonify(instagram_explorer.json)
+
+
+@app.route('/twitter')
+def twitter():
+    twitter_token = session['twitter_token'][0]
+    twitter_token_secret = session['twitter_token'][1]
+    twitter_username = session['twitter_user']
+
+    # Get data from request
+    latitude = request.args.get('latitude', None)
+    longitude = request.args.get('longitude', None)
+    radius = request.args.get('radius', 1)
+    label = request.args.get('label', 99)
+
+    print ('TwitterExplorer for user %s with token %s, '
+           'lat=%s lon=%s radius=%dmi') % (
+        twitter_username, twitter_token, latitude, longitude, radius
+    )
+
+    if latitude is None:
+        return jsonify({"error": "Bad request. Missing latitude"}), 400
+    if longitude is None:
+        return jsonify({"error": "Bad request. Missing longitude"}), 400
+    else:
+        twitter_explorer = TwitterExplorer(
+            twitter_token, twitter_token_secret, twitter_username
+            )
+        twitter_explorer.search_tweets(latitude, longitude, radius, label)
+        return jsonify(twitter_explorer.json), 200
+
 @app.route('/explore')
 def explore():
     return render_template('explore.html')
-    # token = session['instagram_token']
-    # user = session['instagram_user'].get('username')
-    # print 'InstagramExplorer for user %s with token %s' % (user, token)
-    # explorer = InstagramExplorer(token, user)
-    # return jsonify({
-    #     "instagram": explorer.json,
-    #     "twitter": None
-    # })
 
 
 @app.route('/')

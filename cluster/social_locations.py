@@ -57,15 +57,6 @@ class SocialExplorer(object):
     def label_meta(self):
         return self._label_meta
 
-    @property
-    def json(self):
-        return {
-            "username": self.username if self.username else None,
-            "user_id": self.user_id if self.user_id else None,
-            "labels": self.label_meta if self.label_meta else None,
-            "data": [d.json for d in self.data]
-        }
-
     @staticmethod
     def _reverse_geocode(geocoder, tag_name, lat, long):
         point = Point(lat, long)
@@ -166,6 +157,15 @@ class SocialExplorer(object):
                 print 'Error processing location data %s' % e
         else:
             raise NotImplementedError()
+
+    @property
+    def json(self):
+        return {
+            "username": self.username if self.username else None,
+            "user_id": self.user_id if self.user_id else None,
+            "labels": self.label_meta if self.label_meta else None,
+            "data": [d.json for d in self.data]
+        }
 
     def __repr__(self):
         return "%s(username=%s)" % (self.__class__.__name__, self._username)

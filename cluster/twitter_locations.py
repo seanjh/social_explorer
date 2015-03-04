@@ -35,7 +35,13 @@ class TwitterExplorer(SocialExplorer):
             raise InvalidUserException("User %s could not be identified by Twitter" % username)
 
     def search_tweets(self, latitude, longitude, radius_miles, location_label):
-        tweets = self._load_content(latitude, longitude, radius_miles, location_label)
+        # Make certain the types are correct
+        latitude = float(latitude)
+        longitude = float(longitude)
+        radius_miles = int(radius_miles)
+        location_label = int(location_label)
+
+        tweets = self._load_content(latitude, longitude, radius_miles)
         self._standardize_data(tweets, location_label)
         self._collect_population_meta(tweets, location_label)
 
@@ -50,7 +56,7 @@ class TwitterExplorer(SocialExplorer):
                 (searches.get('remaining'), searches.get('limit'))
             )
 
-    def _load_content(self, latitude, longitude, radius_miles, location_label):
+    def _load_content(self, latitude, longitude, radius_miles):
         self._check_rate_limit()
 
         geocode_str = "%0.6f,%0.6f,%smi" % (latitude, longitude, radius_miles)
@@ -133,6 +139,19 @@ class TwitterExplorer(SocialExplorer):
         self.label_meta.setdefault(label, dict())
         self._set_population(tweets, label)
         self._set_president(tweets, label)
+
+    # @property
+    # def json(self):
+    #     return {
+    #         "username": self.username if self.username else None,
+    #         "user_id": self.user_id if self.user_id else None,
+    #         "labels": self.label_meta if self.label_meta else None,
+    #         "data": {
+    #         label: [
+    #             d.json for d in self._data[label]
+    #             ] for (label, val) in self.label_meta
+    #         } if self.label_meta and self.data else None
+    #     }
 
 
 class RateLimitException(BaseException):

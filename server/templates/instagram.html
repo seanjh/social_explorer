@@ -1,0 +1,7 @@
+<div class="thumbnail">
+  <a href="{[{ item.url }]}">
+  <img ng-src="{[{ getImageURL(item.media) }]}" alt="{[{ item.id }]}" class="img-responsive" ng-if="isImage(item.media)">
+  <img ng-src="holder.js/150x150" ng-if="!isImage(item.media)">
+  </a>
+  <!-- <video class="video-player" ng-src="{[{ getVideoURL(item.media) }]}" width="150" height="150" preload="none" ng-if="!isImage(item.media)"></video> -->
+</div>

@@ -1,32 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
-    {{super()}}
+    {{ super() }}
+    <div ng-app="SocialExplorerApp">
+
     <img src="holder.js/100%x600/text:Social Nation goes here">
 
     <hr>
-
-    <div class="panel panel-default">
-          <div class="panel-body">
-              <p>Stuff and things</p>
+    <div ng-controller="cmseInstagramCtrl">
+        <span cmseLoading ng-if="loading=true"></span>
+        <div class="row" ng-repeat="rows in chunkedData">
+          <div class="col-md-3" ng-repeat="item in rows">
+            {% include 'instagram.html' %}
           </div>
-
-        <table class="table">
-            <tr>
-                <th>#</th>
-                <th>Nation</th>
-                <th>President</th>
-                <th>Population</th>
-            </tr>
-            <tr>
-                <td>1</td>
-                <td>Brooklyn</td>
-                <td>
-                    <a href="#">@seannnnnnnnnnnn</a>
-                </td>
-                <td>100</td>
-            </tr>
-
-        </table>
+          <div class="clearfix visible-xs-block"></div>
+        </div>
     </div>
-
 {% endblock %}
