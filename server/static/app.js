@@ -20,7 +20,7 @@
     return $resource('/twitter/');
   }])
 
-  .filter('getLabelName', function () {
+  .filter('getLabelName', [function () {
     return function(label, scope) {
       if (scope.instagram.labels && scope.instagram.labels[label]) {
           return scope.instagram.labels[label].name;
@@ -28,7 +28,7 @@
           return 'N/A';
         }
     };
-  })
+  }])
 
   .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 'cmseTwitterService',
