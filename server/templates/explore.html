@@ -7,13 +7,23 @@
 
     <hr>
     <div ng-controller="cmseSocialCtrl">
-        <span cmseLoading ng-if="loading=true"></span>
-        <div class="row" ng-repeat="rows in chunkedData">
-          <div class="col-md-3" ng-repeat="item in rows">
-            {% include 'instagram.html' %}
+      <span cmseLoading ng-if="loading=true"></span>
+      <div class="panel panel-default" ng-repeat="(key, data) in chunkedData">
+      <div class="panel-heading">
+        <h1 class="panel-title">{[{ key | getLabelName:this }]} (Cluster #{[{ key }]})</h1>
+      </div>
+
+      {% include 'twitter.html' %}
+
+        <div class="panel-body">
+          <div class="row" ng-repeat="rows in data">
+            <div class="col-md-3" ng-repeat="item in rows">
+              {% include 'instagram.html' %}
+            </div>
+            <div class="clearfix visible-xs-block"></div>
           </div>
-          <div class="clearfix visible-xs-block"></div>
         </div>
+      </div>
     </div>
-    
+
 {% endblock %}

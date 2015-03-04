@@ -208,7 +208,7 @@ class Location(object):
         return {
             "latitude": self.latitude,
             "longitude": self.longitude,
-            "label": self.label if self.label is None else None
+            "label": self.label
         }
 
 

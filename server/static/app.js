@@ -16,15 +16,54 @@
     };
   }])
 
+  .filter('getLabelName', function () {
+    return function(label, scope) {
+      if (scope.instagram.labels && scope.instagram.labels[label]) {
+          return scope.instagram.labels[label].name;
+        } else {
+          return 'N/A';
+        }
+    };
+  })
+
   .factory('cmseTwitterService', ['$resource', function ($resource) {
-    return $resource('/twitter/', {}, {});
+    return $resource('/twitter', {}, {});
   }])
 
   .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 
     function($scope, $log, $http, cmseInstagramService) {
       $scope.loading = true;
-      $scope.instagram = []
+      $scope.instagram = {}
+      $scope.chunkedData = {};
+      var chunkSize = 4;
+
+      function partitionByLabel(arr) {
+        var result = {}
+        var data;
+        var label;
+        for (var i=0; i<arr.length; i++) {
+          data = arr[i];
+          label = data.location.label;
+          if (data && label !== null && label >= 0) {
+            if (!result[label]) {
+              // $log.log('Creating new object for label ' + label);
+              result[label] = [];
+            }
+            // $log.log('Inserting object under label ' + label);
+            result[label].push(data);
+          }
+        }
+        return result;
+      }
+
+      // $scope.getLabelName = function(label) {
+      //   if ($scope.instagram.labels && $scope.instagram.labels[label]) {
+      //     return $scope.instagram.labels[label].name;
+      //   } else {
+      //     return 'N/A';
+      //   }
+      // }
 
       $scope.getImageURL = function(media) {
         if (media.thumbnail) return media.thumbnail.url;
@@ -43,7 +82,6 @@
       }
 
       // TODO: CITE http://stackoverflow.com/posts/21653981/revisions
-      var chunkSize = 4;
       function chunk(arr, size) {
         var newArr = [];
         for (var i=0; i<arr.length; i+=size) {
@@ -52,11 +90,16 @@
         return newArr;
       }
 
-      cmseInstagramService.get(function(data) {
-        $scope.instagram = data;
-        $log.log($scope.instagram);
-        $scope.chunkedData = chunk($scope.instagram.data, chunkSize);
-        $log.log($scope.chunkedData);
+      cmseInstagramService.get(function(resp) {
+        $scope.instagram = resp;
+        $log.log('Raw data: ' + $scope.instagram);
+        var labelData = partitionByLabel(resp.data);
+        $log.log(labelData);
+        for (var key in labelData) {
+          $log.log('Getting chunks for label ' + key);
+          $scope.chunkedData[key] = chunk(labelData[key], chunkSize);
+        }
+        $log.log('Chunked data' + $scope.chunkedData);
         $scope.loading = false;
       });
   }])
