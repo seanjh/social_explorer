@@ -159,6 +159,7 @@ def instagram_explore():
 
         session['instagram_data'] = instagram_explorer.json
 
+    print 'Responding with %s' % session['instagram_data']
     return jsonify(session['instagram_data'])
 
 
@@ -194,6 +195,7 @@ def twitter_explore():
 
             session['twitter_data'][label] = twitter_explorer.json
 
+    print 'Responding with %s' % session['twitter_data'][label]
     return jsonify(session['twitter_data'][label]), 200
 
 @app.route('/explore')
