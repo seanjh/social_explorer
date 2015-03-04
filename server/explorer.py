@@ -73,7 +73,7 @@ def clear():
 
 @app.route('/authorize-twitter')
 def authorize_twitter():
-    return twitter_explore.authorize(
+    return twitter.authorize(
         callback=url_for(
             'oauth_authorized_twitter',
             next=request.args.get('next') or request.referrer or None
@@ -124,14 +124,14 @@ instagram = InstagramAPI(
 # TODO: CITATION https://github.com/johnschimmel/Instagram---Python-Flask-example
 @app.route('/authorize-instagram')
 def authorize_instagram():
-    return redirect(instagram_explore.get_authorize_url())
+    return redirect(instagram.get_authorize_url())
 
 
 @app.route('/oauth-authorized-instagram')
 def oauth_authorized_instagram():
     code = request.args.get('code')
     if code:
-        access_token, user = instagram_explore.exchange_code_for_access_token(code)
+        access_token, user = instagram.exchange_code_for_access_token(code)
         if not access_token:
             flash(u'Could not acquire access token.')
             return redirect(url_for('/'))
