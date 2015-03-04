@@ -3,12 +3,13 @@
     {{ super() }}
     <div ng-app="SocialExplorerApp">
 
-    <img src="holder.js/100%x600/text:Social Nation goes here">
+    <img data-src="holder.js/100%x600/text:Social Nation goes here">
 
     <hr>
-    Twitter data: {[{ twitter.length }]}
     <div ng-controller="cmseSocialCtrl">
+
       <span cmseLoading ng-if="loading=true"></span>
+
       <div class="panel panel-default" ng-repeat="(key, data) in chunkedData">
       <div class="panel-heading">
         <h1 class="panel-title">{[{ key | getLabelName:this }]} (Cluster #{[{ key }]})</h1>
@@ -17,7 +18,7 @@
       {% include 'twitter.html' %}
 
         <div class="panel-body">
-          <div class="row" ng-repeat="rows in data">
+          <div class="row" ng-repeat="rows in data.instagram">
             <div class="col-md-3" ng-repeat="item in rows">
               {% include 'instagram.html' %}
             </div>

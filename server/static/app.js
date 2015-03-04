@@ -30,13 +30,24 @@
     };
   })
 
+  .filter('getPopulation', function() {
+    return function(object, scope) {
+      var label = data.location.label;
+      scope.twitter.forEach(function(meta) {
+        if (label in meta.labels)
+          return meta.population;
+      });
+    };
+  })
+
   .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 'cmseTwitterService',
     function($scope, $log, $http, cmseInstagramService, cmseTwitterService) {
       $scope.loading = true;
       $scope.instagram = {}
       $scope.chunkedData = {};
-      $scope.twitter = {};
+      // $scope.twitter = {};
+      $scope.twitter = [];
       var chunkSize = 4;
 
       function partitionByLabel(arr) {
@@ -48,10 +59,8 @@
           label = data.location.label;
           if (data && label !== null && label >= 0) {
             if (!result[label]) {
-              // $log.log('Creating new object for label ' + label);
               result[label] = [];
             }
-            // $log.log('Inserting object under label ' + label);
             result[label].push(data);
           }
         }
@@ -91,12 +100,15 @@
         $log.log(labelData);
         for (key in labelData) {
           $log.log('Getting chunks for label ' + key);
-          $scope.chunkedData[key] = chunk(labelData[key], chunkSize);
+          if (!$scope.chunkedData.key) $scope.chunkedData[key] = {instagram: {}};
+          $scope.chunkedData[key] = {
+            instagram: chunk(labelData[key], chunkSize)
+          };
         }
         $log.log('Chunked data' + $scope.chunkedData);
         $scope.loading = false;
 
-        var sample, query, lat, lon;
+        var sample, query, lat, lon, result;
         for (key in labelData) {
           sample = labelData[key][0];
           // $log.log('Using sample instagram data');
@@ -106,9 +118,18 @@
           query = {latitude: lat, longitude: lon, label: key};
           $log.log(query);
           cmseTwitterService.get(query, function (tweet_meta) {
-            // $log.log('Twitter data for label ' + key);
-            // $log.log(tweet_meta);
-            $scope.twitter[key] = tweet_meta;
+            $log.log('Raw tweet meta: ');
+            $log.log(tweet_meta);
+            var innerKey;
+            for (innerKey in tweet_meta.labels) {
+              result = {
+                population: tweet_meta.labels[innerKey]['population'],
+                president: tweet_meta.labels[innerKey]['president'],
+                data: tweet_meta.data
+              };
+              $log.log(result);
+              $scope.chunkedData[innerKey]['twitter'] = result;
+            }
           });
         }
         $log.log($scope.twitter);
