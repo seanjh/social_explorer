@@ -148,13 +148,17 @@ def oauth_authorized_instagram():
 
 @app.route('/instagram')
 def instagram():
-    instagram_token = session['instagram_token']
-    instagram_user = session['instagram_user'].get('username')
-    print 'InstagramExplorer for user %s with token %s' % (
-        instagram_user, instagram_token
-        )
-    instagram_explorer = InstagramExplorer(instagram_token, instagram_user)
-    return jsonify(instagram_explorer.json)
+    if not session['instagram_data']:
+        instagram_token = session['instagram_token']
+        instagram_user = session['instagram_user'].get('username')
+        print 'InstagramExplorer for user %s with token %s' % (
+            instagram_user, instagram_token
+            )
+        instagram_explorer = InstagramExplorer(instagram_token, instagram_user)
+
+        session['instagram_data'] = instagram_explorer.json
+
+    return jsonify(session['instagram_data'])
 
 
 @app.route('/twitter')

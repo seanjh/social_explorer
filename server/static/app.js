@@ -16,7 +16,12 @@
     };
   }])
 
-  .controller('cmseInstagramCtrl', 
+  // .factory('cmseTwitterService', ['$resource', function ($resource) {
+  //   return $resource('/twitter/', {}, {
+  //     query: {method: 'GET'}})
+  // }])
+
+  .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 
     function($scope, $log, $http, cmseInstagramService) {
       $scope.loading = true;

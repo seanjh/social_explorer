@@ -6,7 +6,7 @@
     <img src="holder.js/100%x600/text:Social Nation goes here">
 
     <hr>
-    <div ng-controller="cmseInstagramCtrl">
+    <div ng-controller="cmseSocialCtrl">
         <span cmseLoading ng-if="loading=true"></span>
         <div class="row" ng-repeat="rows in chunkedData">
           <div class="col-md-3" ng-repeat="item in rows">
@@ -15,4 +15,5 @@
           <div class="clearfix visible-xs-block"></div>
         </div>
     </div>
+    
 {% endblock %}
