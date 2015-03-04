@@ -10,9 +10,6 @@ from geopy import Point, GoogleV3, exc
 ROOT_PATH = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(ROOT_PATH, 'data')
 
-if not os.path.exists(DATA_DIR):
-    os.mkdir(DATA_DIR)
-
 
 class SocialExplorer(object):
     ROWS_INDEX = 0
@@ -147,6 +144,8 @@ class SocialExplorer(object):
             print 'Cannot get label names'
 
     def save(self):
+        if not os.path.exists(DATA_DIR):
+            os.mkdir(DATA_DIR)
         if self._data:
             filename = os.path.join(DATA_DIR, '%s-%s.json' % (self.__class__.__name__, self.username))
             try:

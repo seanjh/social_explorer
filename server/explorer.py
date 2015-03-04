@@ -23,6 +23,7 @@ app.config.update(dict(
 Bootstrap(app)
 oauth = OAuth()
 
+
 def log_to_stderr(app):
     handler = logging.StreamHandler(sys.stderr)
     handler.setFormatter(Formatter(
