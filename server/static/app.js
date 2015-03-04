@@ -16,10 +16,9 @@
     };
   }])
 
-  // .factory('cmseTwitterService', ['$resource', function ($resource) {
-  //   return $resource('/twitter/', {}, {
-  //     query: {method: 'GET'}})
-  // }])
+  .factory('cmseTwitterService', ['$resource', function ($resource) {
+    return $resource('/twitter/', {}, {});
+  }])
 
   .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 
