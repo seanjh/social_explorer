@@ -11,8 +11,16 @@ from instagram.client import InstagramAPI
 from cluster.instagram_locations import InstagramExplorer
 
 app = Flask(__name__)
-Bootstrap(app)
 
+# Load default config
+app.config.update(dict(
+    SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
+    USERNAME=os.getenv('FLASK_USERNAME'),
+    PASSWORD=os.getenv('FLASK_PASSWORD')
+))
+
+Bootstrap(app)
+oauth = OAuth()
 
 def log_to_stderr(app):
     handler = logging.StreamHandler(sys.stderr)
@@ -23,7 +31,6 @@ def log_to_stderr(app):
     handler.setLevel(logging.WARNING)
     app.logger.addHandler(handler)
 
-
 log_to_stderr(app)
 
 if not os.getenv('FLASK_SECRET_KEY'):
@@ -33,15 +40,6 @@ if not os.getenv('FLASK_PASSWORD'):
 if not os.getenv('FLASK_USERNAME'):
     raise Exception("Missing FLASK_USERNAME env variable")
 
-
-# Load default config
-app.config.update(dict(
-    SECRET_KEY=os.getenv('FLASK_SECRET_KEY'),
-    USERNAME=os.getenv('FLASK_USERNAME'),
-    PASSWORD=os.getenv('FLASK_PASSWORD')
-))
-
-oauth = OAuth()
 
 twitter_consumer_key = os.getenv('TWITTER_CONSUMER_KEY')
 twitter_consumer_secret = os.getenv('TWITTER_CONSUMER_SECRET')
