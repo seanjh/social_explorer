@@ -149,54 +149,56 @@ def oauth_authorized_instagram():
 
 @app.route('/instagram')
 def instagram_explore():
-    if not session.get('instagram_data'):
-        instagram_token = session['instagram_token']
-        instagram_user = session['instagram_user'].get('username')
-        print 'InstagramExplorer for user %s with token %s' % (
-            instagram_user, instagram_token
-            )
-        instagram_explorer = InstagramExplorer(instagram_token, instagram_user)
+    # if not session.get('instagram_data'):
+    instagram_token = session['instagram_token']
+    instagram_user = session['instagram_user'].get('username')
+    print 'InstagramExplorer for user %s with token %s' % (
+        instagram_user, instagram_token
+    )
+    instagram_explorer = InstagramExplorer(instagram_token, instagram_user)
 
-        session['instagram_data'] = instagram_explorer.json
+    # session['instagram_data'] = instagram_explorer.json
+    return jsonify(instagram_explorer.json)
 
-    print 'Responding with %s' % session['instagram_data']
-    return jsonify(session['instagram_data'])
-
+    # print 'Responding with %s' % session['instagram_data']
+    # return jsonify(session['instagram_data'])
 
 @app.route('/twitter')
 def twitter_explore():
-    if not session.get('twitter_data'):
-        session['twitter_data'] = {}
+    # if not session.get('twitter_data'):
+    #     session['twitter_data'] = {}
     # Get data from request
     latitude = request.args.get('latitude', None)
     longitude = request.args.get('longitude', None)
     radius = request.args.get('radius', 1)
     label = request.args.get('label', 99)
 
-    if not session['twitter_data'].get('label'):
-        twitter_token = session['twitter_token'][0]
-        twitter_token_secret = session['twitter_token'][1]
-        twitter_username = session['twitter_user']
+    # if not session['twitter_data'].get('label'):
+    twitter_token = session['twitter_token'][0]
+    twitter_token_secret = session['twitter_token'][1]
+    twitter_username = session['twitter_user']
 
-        print ('TwitterExplorer for user %s with token %s, '
-               'lat=%s lon=%s radius=%dmi') % (
-            twitter_username, twitter_token, latitude, longitude, radius
-        )
+    print ('TwitterExplorer for user %s with token %s, '
+           'lat=%s lon=%s radius=%dmi') % (
+        twitter_username, twitter_token, latitude, longitude, radius
+    )
 
-        if latitude is None:
-            return jsonify({"error": "Bad request. Missing latitude"}), 400
-        if longitude is None:
-            return jsonify({"error": "Bad request. Missing longitude"}), 400
-        else:
-            twitter_explorer = TwitterExplorer(
-                twitter_token, twitter_token_secret, twitter_username
-                )
-            twitter_explorer.search_tweets(latitude, longitude, radius, label)
+    if latitude is None:
+        return jsonify({"error": "Bad request. Missing latitude"}), 400
+    if longitude is None:
+        return jsonify({"error": "Bad request. Missing longitude"}), 400
+    else:
+        twitter_explorer = TwitterExplorer(
+            twitter_token, twitter_token_secret, twitter_username
+            )
+        twitter_explorer.search_tweets(latitude, longitude, radius, label)
 
-            session['twitter_data'][label] = twitter_explorer.json
+        # session['twitter_data'][label] = twitter_explorer.json
 
-    print 'Responding with %s' % session['twitter_data'][label]
-    return jsonify(session['twitter_data'][label]), 200
+        return jsonify(twitter_explorer.json)
+
+    # print 'Responding with %s' % session['twitter_data'][label]
+    # return jsonify(session['twitter_data'][label]), 200
 
 @app.route('/explore')
 def explore():
