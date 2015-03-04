@@ -30,16 +30,6 @@
     };
   })
 
-  .filter('getPopulation', function() {
-    return function(object, scope) {
-      var label = data.location.label;
-      scope.twitter.forEach(function(meta) {
-        if (label in meta.labels)
-          return meta.population;
-      });
-    };
-  })
-
   .controller('cmseSocialCtrl', 
     ['$scope', '$log', '$http', 'cmseInstagramService', 'cmseTwitterService',
     function($scope, $log, $http, cmseInstagramService, cmseTwitterService) {
