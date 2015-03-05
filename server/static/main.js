@@ -30,10 +30,10 @@
     };
   }])
 
-  .controller('cmseSocialCtrl', 
+  .controller('cmseSocialCtrl',
     ['$scope', '$log', '$http', 'cmseInstagramService', 'cmseTwitterService',
     function($scope, $log, $http, cmseInstagramService, cmseTwitterService) {
-      $scope.loading = true;
+      $scope.loadingSocial = true;
       $scope.instagram = {}
       $scope.chunkedData = {};
       // $scope.twitter = {};
@@ -96,7 +96,7 @@
           };
         }
         $log.log('Chunked data' + $scope.chunkedData);
-        $scope.loading = false;
+        $scope.loadingSocial = false;
 
         var sample, query, lat, lon, result;
         for (key in labelData) {
@@ -124,11 +124,5 @@
         }
         $log.log($scope.twitter);
       });
-  }])
-
-  .directive('cmseLoading', function() {
-    return {
-      templateUrl: 'loading-partial.html'
-    };
-  });
+  }]);
 })();

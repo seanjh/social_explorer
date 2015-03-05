@@ -1,10 +1,17 @@
 <div class="panel panel-default">
   <div class="panel-body">
-    <p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {[{ data.twitter.population | number }]} Twitter friend Population around this location.
     <p><img ng-src="{[{ data.twitter.president.profile_image_url }]}" class="img-rounded">
-    <a href="{[{ data.twitter.president.url }]}">@{[{ data.twitter.president.screen_name }]} ({[{ data.twitter.president.followers_count }]} followers)</a>, the Twitter President around this location
+    <a href="https://twitter.com/{[{ data.twitter.president.screen_name }]}"> @{[{ data.twitter.president.screen_name }]}</a> ({[{ data.twitter.president.followers_count }]} followers), the Twitter President around this location
+    <p> {[{ data.twitter.president.description }]}
+    <span ng-show="data.twitter.president.location">
+      <p><span class="glyphicon glyphicon-map-marker" aria-hidden="true"></span> {[{ data.twitter.president.location }]}
+    </span>
+    <span ng-show="data.twitter.president.url">
+      <p><span class="glyphicon glyphicon-link" aria-hidden="true"></span><a href="{[{ data.twitter.president.url }]}"> {[{ data.twitter.president.url }]}</a>
+    </span>
+
+    <hr>
+
+    <p><span class="glyphicon glyphicon-user" aria-hidden="true"></span> {[{ data.twitter.population | number }]} Twitter friend Population around this location.
   </div>
 </div>
-
-
-

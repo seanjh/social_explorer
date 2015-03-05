@@ -2,15 +2,18 @@
 {% block content %}
     {{ super() }}
     <div ng-app="SocialExplorerApp">
-      
-    <div ng-controller="cmseSocialCtrl">
 
-      <span cmseLoading ng-if="loading=true"></span>
+
+    <div ng-controller="cmseSocialCtrl">
+      <div ng-show="loadingSocial" class="container">
+        <img ng-src="{{ url_for('.static', filename='spinner.gif') }}">
+        Loading. Please hang tight.
+      </div>
 
       <div class="panel panel-default" ng-repeat="(key, data) in chunkedData">
-      <div class="panel-heading">
-        <h1 class="panel-title">{[{ key | getLabelName:this }]} (Cluster #{[{ key }]})</h1>
-      </div>
+        <div class="panel-heading">
+          <h1 class="panel-title">{[{ key | getLabelName:this }]} (Cluster #{[{ key }]})</h1>
+        </div>
 
       {% include 'twitter.html' %}
 
